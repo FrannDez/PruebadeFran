@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Fotos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arsenica:wght@400;700&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('fondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Arsenica', serif;
+            color: #ffffff;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .menu button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .menu button img {
+            display: block;
+            width: 80px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .menu button img:hover {
+            transform: scale(1.05);
+        }
+        .gallery-container {
+            display: none;
+            max-width: 1000px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>Club Social y Deportivo Mar de Ajó</h1>
+    
+    <div class="menu" id="menu"></div>
+    
+    <div id="galleries"></div>
+
+    <script>
+        const galleries = {
+            "LOCAL - COSME ARGERICH": {thumbnail: 'Cosme.png', photos: [
+                {thumbnail: '1ra-001.jpg', link: 'https://drive.google.com/drive/folders/1YXr-1Mp0foihJTgVwgKU9_oOFcW-6Ebf?usp=drive_link'},
+                {thumbnail: '4ta-001.jpg', link: 'https://drive.google.com/drive/folders/1XTHMrGuQgFTQjpLyPd6ylTrQcfvAWCTG?usp=drive_link'},
+            ]},
+            "VISITANTE - NUCLEO FC": {thumbnail: 'Nucleo.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - CADU": {thumbnail: 'CADU.png', photos: [
+                {thumbnail: '3ra-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_3'},
+            ]},
+            "VISITANTE - Social Mar del Tuyú": {thumbnail: 'MDT.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - Social Las Toninas": {thumbnail: 'LAS TONINAS.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'}, 
+            ]},
+            "VISITANTE - Defensores de Villa Clelia": {thumbnail: 'villa.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},   
+            ]},
+            "LOCAL - Club Atletico Juventud Unida": {thumbnail: 'CAJU.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "VISITANTE - Social Santa Teresita": {thumbnail: 'SANTA 2023.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - El Gran Porvenir": {thumbnail: 'PORVENIR.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+                ]},
+            "VISITANTE - Fomento San Bernardo": {thumbnail: 'FOMENTO SB.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - Barrio Las Quintas": {thumbnail: 'LAS QUINTAS.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - Club Atletico AllBoys": {thumbnail: 'ALLBOYS.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            "LOCAL - Popular Lavalle": {thumbnail: 'LAVALLE.png', photos: [
+                {thumbnail: '2da-001.jpg', link: 'https://drive.google.com/drive/folders/EXAMPLE_LINK_2'},
+            ]},
+            // Agregar más galerías hasta la número 13...
+        };
+
+        const menu = document.getElementById("menu");
+        const galleriesContainer = document.getElementById("galleries");
+
+        Object.keys(galleries).forEach(galleryName => {
+            const button = document.createElement("button");
+            button.innerHTML = `<img src="${galleries[galleryName].thumbnail}" alt="${galleryName}" class="gallery-thumbnail" width="80">`;
+            button.onclick = () => showGallery(galleryName);
+            menu.appendChild(button);
+
+            const galleryDiv = document.createElement("div");
+            galleryDiv.className = "gallery-container";
+            galleryDiv.id = galleryName.replace(/\s+/g, "-").toLowerCase();
+            galleryDiv.innerHTML = `<h2>${galleryName}</h2><div class='gallery'></div>`;
+            galleriesContainer.appendChild(galleryDiv);
+
+            const galleryGrid = galleryDiv.querySelector(".gallery");
+            galleries[galleryName].photos.forEach(photo => {
+                let img = document.createElement("img");
+                img.src = photo.thumbnail;
+                img.alt = "Miniatura";
+                img.onclick = () => window.open(photo.link, "_blank");
+                galleryGrid.appendChild(img);
+            });
+        });
+
+        function showGallery(name) {
+            document.querySelectorAll(".gallery-container").forEach(div => {
+                div.style.display = "none";
+            });
+            document.getElementById(name.replace(/\s+/g, "-").toLowerCase()).style.display = "block";
+        }
+    </script>
+</body>
+</html>
